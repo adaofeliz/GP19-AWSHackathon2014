@@ -1,6 +1,7 @@
 package org.gp19.analysis.service.controller;
 
 import org.gp19.analysis.service.delegate.TermsDelegate;
+import org.gp19.analysis.service.dto.DataSourceDto;
 import org.gp19.analysis.service.dto.OptionDto;
 import org.gp19.analysis.service.dto.WebStatusDto;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ServiceWebController {
 
     private static final String COOKIE_WEB_OPTIONS = "gp19-web-options";
+    private static final String COOKIE_WEB_SOURCES = "gp19-web-sources";
 
     @Resource
     private TermsDelegate termsDelegate;
@@ -37,6 +39,12 @@ public class ServiceWebController {
             webStatusDto.options = (List<OptionDto>) sessionOptions;
         }
 
+        // Retrieve Session Sources
+        Object sessionSources = httpServletRequest.getSession().getAttribute(COOKIE_WEB_SOURCES);
+        if (sessionSources != null && sessionOptions instanceof List) {
+            webStatusDto.sources = (List<DataSourceDto>) sessionSources;
+        }
+
         return webStatusDto;
     }
 
@@ -51,6 +59,7 @@ public class ServiceWebController {
                 termsDelegate.retrieveActiveTerms(
                         webStatusDto.activeTerms,
                         webStatusDto.inactiveTerms,
+                        webStatusDto.sources,
                         webStatusDto.options);
 
         // Inactive Terms
@@ -59,6 +68,10 @@ public class ServiceWebController {
         // User Options
         newWebStatusDto.options = webStatusDto.options;
         httpServletRequest.getSession().setAttribute(COOKIE_WEB_OPTIONS, newWebStatusDto.options); // Saving Options
+
+        // User Options
+        newWebStatusDto.sources = webStatusDto.sources;
+        httpServletRequest.getSession().setAttribute(COOKIE_WEB_SOURCES, newWebStatusDto.sources); // Saving Sources
 
         return newWebStatusDto;
     }
