@@ -1,5 +1,6 @@
 package org.gp19.analysis.service.delegate;
 
+import org.gp19.analysis.service.dto.DataSourceDto;
 import org.gp19.analysis.service.dto.OptionDto;
 import org.gp19.analysis.service.dto.TermDto;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,11 @@ import java.util.List;
 
 @Service
 public class TermsDelegate {
-    public List<TermDto> retrieveActiveTerms(List<TermDto> activeTerms, List<TermDto> inactiveTerms, List<OptionDto> options) {
+    public List<TermDto> retrieveActiveTerms(
+            List<TermDto> activeTerms,
+            List<TermDto> inactiveTerms,
+            List<DataSourceDto> sources,
+            List<OptionDto> options) {
         return null;
     }
 }

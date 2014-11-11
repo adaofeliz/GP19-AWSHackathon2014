@@ -8,6 +8,7 @@ import java.util.List;
 public class WebStatusDto {
 
     public List<OptionDto> options;
+    public List<DataSourceDto> sources;
     public List<TermDto> activeTerms;
     public List<TermDto> inactiveTerms;
 }
