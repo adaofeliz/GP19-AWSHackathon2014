@@ -1,0 +1,12 @@
+#mainpanel_header-innerCt .x-title {
+    background-image: url(http://i.imgur.com/aV2bMN3.png);
+    background-position-x: 0;
+    background-position-y: -0px;
+    background-repeat: no-repeat;
+    text-indent: 65px;
+    padding-top: 8px;
+    top:-3px !important;
+}
+#remember_choice_check{
+    left:10px !important;
+}
