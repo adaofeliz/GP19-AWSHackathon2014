@@ -30,6 +30,9 @@
         <!-- Marshaling -->
         <jackson.version>2.4.3</jackson.version>
 
+        <!-- Swagger -->
+        <swagger.version>0.8.8</swagger.version>
+
         <!-- Build Plugins -->
         <maven-compiler.version>3.2</maven-compiler.version>
         <maven-war.version>2.5</maven-war.version>
@@ -72,6 +75,13 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- Swagger -->
+        <dependency>
+            <groupId>com.mangofactory</groupId>
+            <artifactId>swagger-springmvc</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
     </dependencies>
