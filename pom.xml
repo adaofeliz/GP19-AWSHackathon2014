@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>GP19-AWSHackathon2014</groupId>
-        <artifactId>gp19</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-
     <groupId>GP19-AWSHackathon2014</groupId>
-    <artifactId>gp19-datasources</artifactId>
+    <artifactId>gp19</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
 
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>gp19-analysis</module>
+        <module>gp19-datasources</module>
+        <module>gp19-web</module>
+    </modules>
 
 </project>
