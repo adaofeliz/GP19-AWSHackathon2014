@@ -30,37 +30,41 @@ public class SynonymsDataSource {
     public HashSet<TermDto> getValidTerms(HashSet<TermDto> activeTerms, HashSet<TermDto> inactiveTerms) {
         HashSet<TermDto> validTerms = new HashSet<>();
 
+
         for (TermDto termDto : activeTerms) {
 
-            // Prepare acceptable media type
-            List<MediaType> acceptableMediaTypes = new ArrayList<>();
-            acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+            try {
+                // Prepare acceptable media type
+                List<MediaType> acceptableMediaTypes = new ArrayList<>();
+                acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
 
-            // Prepare header
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(acceptableMediaTypes);
-            HttpEntity<String> entity = new HttpEntity<>(headers);
+                // Prepare header
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAccept(acceptableMediaTypes);
+                HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            // Send the request as GET
-            ResponseEntity<Synonyms> synonymsDataResponseEntity =
-                    restTemplate.exchange(SYNONYMS_URL + termDto.label, HttpMethod.GET, entity, Synonyms.class);
+                // Send the request as GET
+                ResponseEntity<Synonyms> synonymsDataResponseEntity =
+                        restTemplate.exchange(SYNONYMS_URL + termDto.label, HttpMethod.GET, entity, Synonyms.class);
 
-            Synonyms synonyms = synonymsDataResponseEntity.getBody();
+                Synonyms synonyms = synonymsDataResponseEntity.getBody();
 
-            if (synonyms != null
-                    && synonyms.getTermArrayArray() != null
-                    && synonyms.getTermArrayArray().getTermArray() != null
-                    && synonyms.getTermArrayArray().getTermArray().getTerm() != null) {
-                for (String term : synonyms.getTermArrayArray().getTermArray().getTerm()) {
-                    TermDto newTerm = new TermDto();
-                    newTerm.label = term;
-                    newTerm.source = "synonyms";
-                    validTerms.add(newTerm);
+                if (synonyms != null
+                        && synonyms.getTermArrayArray() != null
+                        && synonyms.getTermArrayArray().getTermArray() != null
+                        && synonyms.getTermArrayArray().getTermArray().getTerm() != null) {
+                    for (String term : synonyms.getTermArrayArray().getTermArray().getTerm()) {
+                        TermDto newTerm = new TermDto();
+                        newTerm.label = term;
+                        newTerm.source = "synonyms";
+                        validTerms.add(newTerm);
 
+                    }
                 }
+            } catch (Exception e) {
+                // do nothing.
             }
         }
-
         return validTerms;
     }
 }
