@@ -159,4 +159,10 @@ public class ServiceWebController {
 
         return webStatusDto;
     }
+
+    @RequestMapping(value = "/web-status/error/mock", method = RequestMethod.GET)
+    public WebStatusDto getWebStatusError()
+            throws Exception {
+        throw new Exception("This is an Mock Error");
+    }
 }
