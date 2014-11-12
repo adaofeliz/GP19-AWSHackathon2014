@@ -1,5 +1,6 @@
 package org.gp19.analysis.service.controller;
 
+import org.gp19.analysis.service.datasource.SynonymsDataSource;
 import org.gp19.analysis.service.delegate.AnalysisServiceDelegate;
 import org.gp19.analysis.service.dto.DataSourceDto;
 import org.gp19.analysis.service.dto.OptionDto;
@@ -12,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 /**
  * Created on 11/11/14.
@@ -24,6 +24,9 @@ import java.util.List;
 public class ServiceWebController {
 
     private static final String COOKIE_WEB_INACTIVE = "gp19-web-inactive-words";
+
+    @Resource
+    private SynonymsDataSource synonymsDataSource;
 
     @Resource
     private AnalysisServiceDelegate analysisServiceDelegate;
@@ -41,7 +44,7 @@ public class ServiceWebController {
         webStatusDto.sources = analysisServiceDelegate.getServiceSources();
 
         // Inactive Terms
-        webStatusDto.inactiveTerms = (List<TermDto>) httpServletRequest.getSession().getAttribute(COOKIE_WEB_INACTIVE);
+        webStatusDto.inactiveTerms = (HashSet<TermDto>) httpServletRequest.getSession().getAttribute(COOKIE_WEB_INACTIVE);
 
         return webStatusDto;
     }
@@ -79,7 +82,7 @@ public class ServiceWebController {
 
         WebStatusDto webStatusDto = new WebStatusDto();
 
-        ArrayList<TermDto> activeTerms = new ArrayList<>();
+        HashSet<TermDto> activeTerms = new HashSet<>();
 
         // Active Terms
         TermDto term1 = new TermDto();
@@ -97,7 +100,7 @@ public class ServiceWebController {
 
         webStatusDto.activeTerms = activeTerms;
 
-        ArrayList<TermDto> inactiveTerms = new ArrayList<>();
+        HashSet<TermDto> inactiveTerms = new HashSet<>();
 
         // Inactive Terms
         TermDto term4 = new TermDto();
@@ -116,16 +119,14 @@ public class ServiceWebController {
         webStatusDto.inactiveTerms = inactiveTerms;
 
         // Sources
-        ArrayList<DataSourceDto> dataSourceDtos = new ArrayList<>();
+        HashSet<DataSourceDto> dataSourceDtos = new HashSet<>();
 
         DataSourceDto dataSourceDto1 = new DataSourceDto();
-        dataSourceDto1.id = 1L;
         dataSourceDto1.label = "Twitter";
         dataSourceDto1.enabled = Boolean.FALSE;
         dataSourceDtos.add(dataSourceDto1);
 
         DataSourceDto dataSourceDto2 = new DataSourceDto();
-        dataSourceDto2.id = 2L;
         dataSourceDto2.label = "Google";
         dataSourceDto2.enabled = Boolean.TRUE;
         dataSourceDtos.add(dataSourceDto2);
@@ -134,15 +135,13 @@ public class ServiceWebController {
 
         // Options
 
-        ArrayList<OptionDto> optionDtos = new ArrayList<>();
+        HashSet<OptionDto> optionDtos = new HashSet<>();
 
         OptionDto optionDto1 = new OptionDto();
-        optionDto1.id = 1L;
         optionDto1.label = "Algorithm A";
         optionDto1.enabled = Boolean.TRUE;
         optionDtos.add(optionDto1);
         OptionDto optionDto2 = new OptionDto();
-        optionDto2.id = 2L;
         optionDto2.label = "Option B";
         optionDto2.enabled = Boolean.FALSE;
         optionDtos.add(optionDto2);

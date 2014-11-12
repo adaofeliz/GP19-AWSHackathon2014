@@ -25,6 +25,7 @@
 
         <!-- Spring MVC and Javax Servlet -->
         <spring.version>4.1.1.RELEASE</spring.version>
+        <aspectjrt.version>1.8.3</aspectjrt.version>
         <servlet.version>3.1.0</servlet.version>
 
         <!-- Marshaling -->
@@ -62,6 +63,19 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring AOP + AspectJ -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectjrt.version}</version>
         </dependency>
 
         <!-- Marshaling for @ResponseBody-->
@@ -139,7 +153,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>${tomcat.version}</version>
                 <configuration>
-                    <port>8080</port>
+                    <port>9090</port>
                     <path>/</path>
                 </configuration>
             </plugin>
