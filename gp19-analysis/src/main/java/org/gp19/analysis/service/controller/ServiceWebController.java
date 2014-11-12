@@ -1,6 +1,5 @@
 package org.gp19.analysis.service.controller;
 
-import org.gp19.analysis.service.datasource.SynonymsDataSource;
 import org.gp19.analysis.service.delegate.AnalysisServiceDelegate;
 import org.gp19.analysis.service.dto.DataSourceDto;
 import org.gp19.analysis.service.dto.OptionDto;
@@ -24,9 +23,6 @@ import java.util.HashSet;
 public class ServiceWebController {
 
     private static final String COOKIE_WEB_INACTIVE = "gp19-web-inactive-words";
-
-    @Resource
-    private SynonymsDataSource synonymsDataSource;
 
     @Resource
     private AnalysisServiceDelegate analysisServiceDelegate;
