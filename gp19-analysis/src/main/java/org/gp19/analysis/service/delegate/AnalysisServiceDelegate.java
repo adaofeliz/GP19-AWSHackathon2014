@@ -12,12 +12,21 @@ import java.util.List;
  */
 
 @Service
-public class TermsDelegate {
+public class AnalysisServiceDelegate {
+
     public List<TermDto> retrieveActiveTerms(
             List<TermDto> activeTerms,
             List<TermDto> inactiveTerms,
             List<DataSourceDto> sources,
             List<OptionDto> options) {
+        return null;
+    }
+
+    public List<OptionDto> getServiceOptions() {
+        return null;
+    }
+
+    public List<DataSourceDto> getServiceSources() {
         return null;
     }
 }
