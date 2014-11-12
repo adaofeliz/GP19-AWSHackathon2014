@@ -1,9 +1,11 @@
 package org.gp19.analysis;
 
+import org.gp19.analysis.service.filter.SimpleCORSFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
@@ -24,10 +26,15 @@ public class AppInitializer implements WebApplicationInitializer {
 
         // Add the servlet mapping manually and make it initialize automatically
         DispatcherServlet dispatcherServlet = new DispatcherServlet(applicationContext);
-        ServletRegistration.Dynamic servlet = servletContext.addServlet("mvc-dispatcher", dispatcherServlet);
 
+        // ServletRegistration
+        ServletRegistration.Dynamic servlet = servletContext.addServlet("mvc-dispatcher", dispatcherServlet);
         servlet.addMapping("/");
         servlet.setAsyncSupported(true);
         servlet.setLoadOnStartup(1);
+
+        // FilterRegistration
+        servletContext.addFilter("simpleCORSFilter", SimpleCORSFilter.class);
+
     }
 }
