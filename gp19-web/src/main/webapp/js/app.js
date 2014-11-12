@@ -69,38 +69,58 @@ Ext.onReady(function () {
     });
 
 
-
-    Ext.create('Ext.form.Panel', {
+    var mainpanel = Ext.create('Ext.form.Panel', {
         renderTo: Ext.getBody(),
         bodyPadding: 10,
-        width: '100%',
-        title: 'Options',
-        id:'form',
-        items: [{
-            xtype: 'fieldcontainer',
-            fieldLabel: 'Data Sources',
-            defaultType: 'checkboxfield',
-            items: []
+        width: '50%',
+        style: {
+            position: 'absolute',
+            left: '25%',
+            margin:'auto'
         },
+        title: 'Options',
+        align:'center',
+        id:'form',
+        defaults: {
+            margin: '15px 0 0 0'
+        },
+        items: [
+            {
+
+                xtype:'textfield',
+                fieldLabel:'Search Term',
+                width: '600px'
+            },
+            {
+
+                xtype:'button',
+                text:'Search'
+
+            }
+            ,
             {
                 xtype: 'combobox',
-                label: 'Algorithm',
-                //store: dataSources,
-                id:'datasourcescombo',
+                fieldLabel: 'Options',
+                id:'optionscombo',
                 queryMode: 'local',
                 displayField: 'label',
-                valueField: 'id'
+                valueField: 'id',
+                multiSelect: true,
+                editable : false,
+                width: '600px'
 
             },
             {
-                xtype: 'fieldcontainer',
-                fieldLabel: '',
-                items: [
-                    {
-                        xtype:'textfield',
-                        label:''
-                    }
-                ]
+                xtype: 'combobox',
+                fieldLabel: 'Datasources',
+                id:'datasourcescombo',
+                queryMode: 'local',
+                displayField: 'label',
+                valueField: 'id',
+                multiSelect: true,
+                editable : false,
+                width: '600px'
+
             },
             {
                 xtype: 'fieldcontainer',
@@ -113,7 +133,7 @@ Ext.onReady(function () {
                         id: 'searchtermsGrid',
                         columns:[
                             {
-                                text     : 'Term',
+                                text     : 'Related Terms',
                                 flex     : 1,
                                 sortable : false,
                                 dataIndex: 'label'
@@ -128,6 +148,8 @@ Ext.onReady(function () {
                                     tooltip: 'Remove Term',
                                     handler: function(grid, rowIndex, colIndex) {
                                         var rec = grid.getStore().getAt(rowIndex);
+                                        deletedTermsStore.add(rec);
+                                        searchTermsStore.remove(rec);
                                     }
                                 }]
                             }
@@ -147,7 +169,7 @@ Ext.onReady(function () {
                         id: 'removedTermsGrid',
                         columns:[
                             {
-                                text     : 'Term',
+                                text     : 'Unrelated Terms',
                                 flex     : 1,
                                 sortable : false,
                                 dataIndex: 'label'
@@ -162,6 +184,8 @@ Ext.onReady(function () {
                                     tooltip: 'Add Back',
                                     handler: function(grid, rowIndex, colIndex) {
                                         var rec = grid.getStore().getAt(rowIndex);
+                                        searchTermsStore.add(rec);
+                                        deletedTermsStore.remove(rec);
                                     }
                                 }]
                             }
@@ -175,17 +199,43 @@ Ext.onReady(function () {
 
     Ext.Ajax.request({
         url: 'http://localhost:9090/web-status/mock',
+        params: {
+
+        },
         success: function(response) {
             var json = Ext.decode(response.responseText);
-            dataSourceStore.loadData(json.sources);
-            searchTermsStore.loadData(json.activeTerms);
-            deletedTermsStore.loadData(json.inactiveTerms);
+            dataSourceStore.loadData(json['sources']);
+            searchTermsStore.loadData(json['activeTerms']);
+            deletedTermsStore.loadData(json['inactiveTerms']);
+            optionsStore.loadData(json['options']);
 
             Ext.getCmp('datasourcescombo').setStore(dataSourceStore);
+            setDefaultValues(Ext.getCmp('datasourcescombo'),'enabled','label');
             Ext.getCmp('searchtermsGrid').setStore(searchTermsStore);
             Ext.getCmp('removedTermsGrid').setStore(deletedTermsStore);
+            Ext.getCmp('optionscombo').setStore(optionsStore);
+            setDefaultValues(Ext.getCmp('optionscombo'),'enabled','label');
         }
     });
+
+    function prepareDataForPost(){
+        var datatopost = {};
+
+    }
+
+    // Call it after setting the store to set the default values
+    function setDefaultValues(component,keytolook,valueToSet){
+        var items = component.getStore().getData().items;
+
+        var valuesToSet = [];
+        for(var i in items){
+            if(keytolook in items[i].data && items[i].data[keytolook]){
+                valuesToSet.push(items[i].data[valueToSet]);
+            }
+        }
+
+        component.setValue(valuesToSet);
+    }
 
 
     /**
