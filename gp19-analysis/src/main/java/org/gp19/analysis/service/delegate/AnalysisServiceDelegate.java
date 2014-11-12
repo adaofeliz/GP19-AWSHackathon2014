@@ -55,9 +55,9 @@ public class AnalysisServiceDelegate {
         HashSet<TermDto> termDtos = new HashSet<>();
 
         // Check the requested Sources
-        if (sources.contains(synonymsSource)) {
+//        if (sources.contains(synonymsSource)) {
             termDtos.addAll(synonymsDataSource.getValidTerms(activeTerms, inactiveTerms));
-        }
+//        }
 
         // TODO Check the requested Options
 

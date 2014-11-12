@@ -67,6 +67,12 @@ public class ServiceWebController {
         newWebStatusDto.inactiveTerms = webStatusDto.inactiveTerms;
         httpServletRequest.getSession().setAttribute(COOKIE_WEB_INACTIVE, webStatusDto.inactiveTerms);
 
+        // Retrieve Session Options
+        webStatusDto.options = analysisServiceDelegate.getServiceOptions();
+
+        // Retrieve Session Sources
+        webStatusDto.sources = analysisServiceDelegate.getServiceSources();
+
         return newWebStatusDto;
     }
 
