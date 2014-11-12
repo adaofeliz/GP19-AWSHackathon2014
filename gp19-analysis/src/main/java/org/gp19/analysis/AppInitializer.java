@@ -5,10 +5,12 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import java.util.EnumSet;
 
 
 public class AppInitializer implements WebApplicationInitializer {
@@ -34,7 +36,7 @@ public class AppInitializer implements WebApplicationInitializer {
         servlet.setLoadOnStartup(1);
 
         // FilterRegistration
-        servletContext.addFilter("simpleCORSFilter", SimpleCORSFilter.class);
-
+        FilterRegistration.Dynamic filterReg = servletContext.addFilter("simpleCORSFilter", SimpleCORSFilter.class);
+        filterReg.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 }
