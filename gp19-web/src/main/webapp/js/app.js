@@ -12,12 +12,28 @@ Ext.onReady(function () {
         ]
     });
 
-    var alg = Ext.define('algorithm', {
+    var dataSourceStore = Ext.create('Ext.data.Store', {
+        model: 'dataSources',
+        storeId     : 'datasourceStore',
+        autoLoad: false,
+        data : []
+    });
+
+
+    var options = Ext.define('optionss', {
         extend: 'Ext.data.Model',
         fields: [
+            {name: 'id', type: 'int'},
             {name: 'label', type: 'string'},
             {name: 'enabled',  type: 'boolean'}
         ]
+    });
+
+    var optionsStore = Ext.create('Ext.data.Store', {
+        model: options,
+        storeId     : 'optionsStore',
+        autoLoad : false,
+        data:[]
     });
 
     var searchTerms = Ext.define('searchTerms', {
@@ -29,6 +45,13 @@ Ext.onReady(function () {
         ]
     });
 
+    var searchTermsStore = Ext.create('Ext.data.Store', {
+        model: searchTerms,
+        storeId     : 'searchTermsStore',
+        autoLoad : false,
+        data:[]
+    });
+
     var deletedSearchTerms = Ext.define('deletedSearchTerms', {
         extend: 'Ext.data.Model',
         fields: [
@@ -38,24 +61,15 @@ Ext.onReady(function () {
         ]
     });
 
+    var deletedTermsStore = Ext.create('Ext.data.Store', {
+        model: deletedSearchTerms,
+        storeId     : 'deletedTermsStore',
+        autoLoad : false,
+        data:[]
+    });
 
-    var dataSources = [
-        {
-            "label" : 'Twitter',
-            'enabled' : true,
-            'id' : 1
-        },
-        {
-            "label" : 'Google',
-            'enabled' : false,
-            'id' : 2
-        },
-        {
-            "label" : 'Yahoo',
-            'enabled' : true,
-            'id' : 3
-        }
-    ];
+
+
     Ext.create('Ext.form.Panel', {
         renderTo: Ext.getBody(),
         bodyPadding: 10,
@@ -66,19 +80,16 @@ Ext.onReady(function () {
             xtype: 'fieldcontainer',
             fieldLabel: 'Data Sources',
             defaultType: 'checkboxfield',
-            items: dataSources.map(function(dataSource) {
-                return {
-                    boxLabel: dataSource.label,
-                    name: dataSource.id,
-                    inputValue: dataSource.id,
-                    id: "checkbox"+dataSource.id,
-                    checked: dataSource.enabled
-                }
-            })
+            items: []
         },
             {
                 xtype: 'combobox',
                 label: 'Algorithm',
+                //store: dataSources,
+                id:'datasourcescombo',
+                queryMode: 'local',
+                displayField: 'label',
+                valueField: 'id'
 
             },
             {
@@ -87,7 +98,7 @@ Ext.onReady(function () {
                 items: [
                     {
                         xtype:'textfield',
-                        label:'',
+                        label:''
                     }
                 ]
             },
@@ -99,6 +110,29 @@ Ext.onReady(function () {
                     {
                         xtype:'grid',
                         label:'',
+                        id: 'searchtermsGrid',
+                        columns:[
+                            {
+                                text     : 'Term',
+                                flex     : 1,
+                                sortable : false,
+                                dataIndex: 'label'
+                            },
+                            {
+                                menuDisabled: true,
+                                sortable: false,
+                                xtype: 'actioncolumn',
+                                width: 50,
+                                items: [{
+                                    iconCls: 'sell-col',
+                                    tooltip: 'Remove Term',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var rec = grid.getStore().getAt(rowIndex);
+                                    }
+                                }]
+                            }
+                        ]
+
                     }
                 ]
             },
@@ -110,11 +144,49 @@ Ext.onReady(function () {
                     {
                         xtype:'grid',
                         label:'',
+                        id: 'removedTermsGrid',
+                        columns:[
+                            {
+                                text     : 'Term',
+                                flex     : 1,
+                                sortable : false,
+                                dataIndex: 'label'
+                            },
+                            {
+                                menuDisabled: true,
+                                sortable: false,
+                                xtype: 'actioncolumn',
+                                width: 50,
+                                items: [{
+                                    iconCls: 'buy-col',
+                                    tooltip: 'Add Back',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var rec = grid.getStore().getAt(rowIndex);
+                                    }
+                                }]
+                            }
+                        ]
+
                     }
                 ]
             }
         ]
     });
+
+    Ext.Ajax.request({
+        url: 'http://localhost:9090/web-status/mock',
+        success: function(response) {
+            var json = Ext.decode(response.responseText);
+            dataSourceStore.loadData(json.sources);
+            searchTermsStore.loadData(json.activeTerms);
+            deletedTermsStore.loadData(json.inactiveTerms);
+
+            Ext.getCmp('datasourcescombo').setStore(dataSourceStore);
+            Ext.getCmp('searchtermsGrid').setStore(searchTermsStore);
+            Ext.getCmp('removedTermsGrid').setStore(deletedTermsStore);
+        }
+    });
+
 
     /**
      *Buidl the embed by form values
